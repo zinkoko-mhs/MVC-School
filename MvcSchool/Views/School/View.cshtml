@@ -1,0 +1,32 @@
+﻿
+@{
+}
+
+@model MvcSchool.Models.UpdateStudentViewModel
+
+<h2>Edit Student</h2>
+<form class="mt-3" method="post" action="View">
+    <div class="mb-3">
+        <label for="" class="form-label">Student ID</label>
+        <input type="text" class="form-control" asp-for="StudentID" readonly>
+    </div>
+    <div class="mb-3">
+        <label for="" class="form-label">Student Name</label>
+        <input type="text" class="form-control" asp-for="StudentName">
+    </div>
+    <div class="mb-3">
+        <label for="" class="form-label">Date Of Birth</label>
+        <input type="date" class="form-control" asp-for="DateOfBirth">
+    </div>
+    <div class="mb-3">
+        <label for="" class="form-label">Father Name</label>
+        <input type="text" class="form-control" asp-for="FatherName">
+    </div>
+    <div class="mb-3">
+        <label for="" class="form-labe">Class</label>
+        <input type="text" class="form-control" asp-for="Class">
+    </div>
+
+  <button type="submit" class="btn btn-primary">Submit</button>
+  <button type="submit" class="btn btn-danger" asp-controller="School" asp-action="Delete">Delete</button>
+</form>

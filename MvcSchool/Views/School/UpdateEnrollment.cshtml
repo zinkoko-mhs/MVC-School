@@ -1,0 +1,40 @@
+﻿@model MvcSchool.Models.UpdateEnrollmentViewModel
+@{
+}
+
+<h2>Edit Enrollment</h2>
+<form class="mt-3" method="post" action="UpdateEnrollment">
+    <div class="mb-3">
+        <label for="" class="form-label">Enrollment ID</label>
+        <input type="text" class="form-control" asp-for="EnrollmentID" readonly>
+    </div>
+    <div class="mb-3">
+        <label for="" class="form-label">Student ID</label>
+        <input type="number" class="form-control" asp-for="StudentID">
+    </div>
+    <div class="mb-3">
+        <label for="" class="form-label">Class ID</label>
+        <input type="number" class="form-control" asp-for="ClassID">
+    </div>
+    <div class="mb-3">
+        <label for="" class="form-label">Payment Status</label>
+        <input type="string" class="form-control" asp-for="PaymentStautus">
+    </div>
+    <div class="mb-3">
+        <label for="" class="form-labe">Payment Deadline</label>
+        <input type="date" class="form-control" asp-for="PaymentDeadline">
+    </div>
+    <div class="mb-3">
+        <label for="" class="form-labe">Created Date</label>
+        <input type="date" class="form-control" asp-for="CreatedDate">
+    </div>
+    <div class="mb-3">
+        <label for="" class="form-labe">Created By</label>
+        <input type="text" class="form-control" asp-for="CreatedBy">
+    </div>
+
+  <button type="submit" class="btn btn-primary">Submit</button>
+  <button type="submit" class="btn btn-danger" asp-controller="School" asp-action="DeleteEnrollment">Delete</button>
+</form>
+
+

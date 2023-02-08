@@ -1,0 +1,33 @@
+﻿
+@{
+}
+
+@model List<MvcSchool.Models.Domain.Student>
+
+<h2>Students</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Student ID</th>
+            <th>Student Name</th>
+            <th>Date Of Birth</th>
+            <th>Father Name</th>
+            <th>Class</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var student in Model)
+        {
+            <tr>
+                <td>@student.StudentID</td>
+                <td>@student.StudentName</td>
+                <td>@student.DateOfBirth.ToString("dd-MM-yyyy")</td>
+                <td>@student.FatherName</td>
+                <td>@student.Class</td>
+                <td><a href="School/View/@student.StudentID">View</a></td>
+            </tr>    
+        }
+    </tbody>
+</table>

@@ -1,0 +1,39 @@
+﻿
+@{
+}
+
+@model List<MvcSchool.Models.ShowEnrollmentViewModel>
+
+<h2>Enrollment</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Enrollment ID</th>
+            <th>Student Name</th>
+            <th>Class</th>
+            <th>Payment Status</th>
+            <th>Payment Deadline</th>
+            <th>Created Date</th>
+            <th>Created By</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var enrollment in Model)
+        {
+                <tr>
+                    <td>@enrollment.EnrollmentID</td>
+                    <td>@enrollment.StudentName</td>
+                    <td>@enrollment.ClassName</td>
+                    <td>@enrollment.PaymentStautus</td>
+                    <td>@enrollment.PaymentDeadline</td>
+                    <td>@enrollment.CreatedDate</td>
+                    <td>@enrollment.CreatedBy</td>
+                    <td><a href="UpdateEnrollment/@enrollment.EnrollmentID">View</a></td>
+                </tr>    
+        }
+    </tbody>
+</table>
+
+

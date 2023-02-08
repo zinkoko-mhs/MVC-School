@@ -1,0 +1,33 @@
+﻿
+@{
+}
+
+@model List<MvcSchool.Models.Domain.Class>
+
+<h2>Classes</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Class ID</th>
+            <th>Class Name</th>
+            <th>Class Fee</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var classModel in Model)
+        {
+            <tr>
+                <td>@classModel.ClassID</td>
+                <td>@classModel.ClassName</td>
+                <td>@classModel.ClassFee</td>
+                <td>@classModel.StartDate</td>
+                <td>@classModel.EndDate</td>
+                <td><a href="UpdateClass/@classModel.ClassID">View</a></td>
+            </tr>    
+        }
+    </tbody>
+</table>
