@@ -1,15 +1,16 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MvcSchool.Data;
 using MvcSchool.Models;
 using MvcSchool.Models.Domain;
+using System.Collections.Immutable;
 
 namespace MvcSchool.Controllers
 {
     public class SchoolController : Controller
     {
         private readonly SchoolDbContext schoolDbContext;
-
         public SchoolController(SchoolDbContext schoolDbContext)
         {
             this.schoolDbContext = schoolDbContext;
@@ -36,7 +37,7 @@ namespace MvcSchool.Controllers
                 StudentName= addStudentRequest.StudentName,
                 DateOfBirth=addStudentRequest.DateOfBirth,
                 FatherName=addStudentRequest.FatherName,
-                Class=addStudentRequest.Class,
+                //Class=addStudentRequest.Class,
             };
             await schoolDbContext.Students.AddAsync(student);
             await schoolDbContext.SaveChangesAsync();
@@ -56,7 +57,7 @@ namespace MvcSchool.Controllers
                     StudentName = student.StudentName,
                     DateOfBirth = student.DateOfBirth,
                     FatherName = student.FatherName,
-                    Class = student.Class,
+                    //Class = student.Class,
                 };
                 return await Task.Run(()=>View(("View") ,studentViewModel));
             }
@@ -74,7 +75,7 @@ namespace MvcSchool.Controllers
                 student.StudentName= updateStudentRequest.StudentName;
                 student.DateOfBirth= updateStudentRequest.DateOfBirth;
                 student.FatherName= updateStudentRequest.FatherName;
-                student.Class = updateStudentRequest.Class;
+                //student.Class = updateStudentRequest.Class;
 
                 await schoolDbContext.SaveChangesAsync();
                 return RedirectToAction("Index");
@@ -178,22 +179,34 @@ namespace MvcSchool.Controllers
 
         [HttpGet]
         public IActionResult AddEnrollment()
-        {
-            return View();
+        {            
+            AddEnrollmentViewModel addEnrollmentRequest = new AddEnrollmentViewModel();
+            addEnrollmentRequest.StudentName = (from s in schoolDbContext.Students select s.StudentName).Distinct().ToList();
+            addEnrollmentRequest.ClassName = (from c in schoolDbContext.Classes select c.ClassName).Distinct().ToList();
+            return View(addEnrollmentRequest);
         }
 
         [HttpPost]
         public async Task<IActionResult> AddEnrollment(AddEnrollmentViewModel addEnrollmentRequest)
         {
-            var enrollment = new Enrollment() 
+            string name = addEnrollmentRequest.StudentName.First();
+            string className = addEnrollmentRequest.ClassName.First();
+
+            var enrollment = new Enrollment()
             {
-                StudentID = addEnrollmentRequest.StudentID,
-                ClassID= addEnrollmentRequest.ClassID,
+                StudentID = (from s in schoolDbContext.Students
+                             where s.StudentName == name
+                             select s.StudentID).First(),
+                ClassID = (from c in schoolDbContext.Classes
+                           where c.ClassName == className
+                           select c.ClassID).First(),
+                //db.Countries.First(a => a.DOTWInternalID == citee.CountryCode).ID
                 PaymentStautus = addEnrollmentRequest.PaymentStautus,
-                PaymentDeadline= addEnrollmentRequest.PaymentDeadline,
-                CreatedDate= addEnrollmentRequest.CreatedDate,
-                CreatedBy= addEnrollmentRequest.CreatedBy,
+                PaymentDeadline = addEnrollmentRequest.PaymentDeadline,
+                CreatedDate = addEnrollmentRequest.CreatedDate,
+                CreatedBy = addEnrollmentRequest.CreatedBy,
             };
+
             await schoolDbContext.AddAsync(enrollment);
             await schoolDbContext.SaveChangesAsync();
 
@@ -279,7 +292,7 @@ namespace MvcSchool.Controllers
 
         }
 
-        [HttpGet]
+        /*[HttpGet]
         public async Task<IActionResult> ClassSelect(string ClassName)
         {
             var student = await (from s in schoolDbContext.Students
@@ -294,6 +307,6 @@ namespace MvcSchool.Controllers
                                  }).ToListAsync();
             return View(student);
 
-        }
+        }*/
     }
 }

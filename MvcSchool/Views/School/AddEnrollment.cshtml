@@ -1,21 +1,41 @@
-﻿@{
-}
-
+﻿
 @model MvcSchool.Models.AddEnrollmentViewModel
 
 <h2>Add Enrollment</h2>
 <form class="mt-3" method="post" action="AddEnrollment">
     <div class="mb-3">
-        <label for="" class="form-label">Student ID</label>
-        <input type="number" class="form-control" asp-for="StudentID">
+        <select class="form-select" asp-for="StudentName" aria-label="Student Name">
+            @foreach(var studentName in Model.StudentName)
+            {
+                <option value="@studentName">@studentName</option>
+            }
+        </select>
+        <!--<input type="number" class="form-control" asp-for="StudentName">-->
     </div>
     <div class="mb-3">
-        <label for="" class="form-label">Class ID</label>
-        <input type="number" class="form-control" asp-for="ClassID">
+        <!--<label for="" class="form-label">Class ID</label>-->
+        <!--<input type="number" class="form-control" asp-for="">-->
+        <select class="form-select" asp-for="ClassName" aria-label="Class Name">
+            @foreach(var className in Model.ClassName)
+            {
+                <option value="@className">@className</option>
+            }
+        </select>
     </div>
     <div class="mb-3">
-        <label for="" class="form-label">Payment Status</label>
-        <input type="text" class="form-control" asp-for="PaymentStautus">
+        
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="Done" asp-for="PaymentStautus" id="flexCheckDefault">
+            <label class="form-check-label" for="flexCheckDefault">
+                Done
+            </label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="Pending" asp-for="PaymentStautus" id="flexCheckChecked">
+            <label class="form-check-label" for="flexCheckChecked">
+                Pending
+            </label>
+        </div>
     </div>
     <div class="mb-3">
         <label for="" class="form-label">Payment Deadline</label>

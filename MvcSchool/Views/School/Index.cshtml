@@ -4,8 +4,8 @@
 
 @model List<MvcSchool.Models.Domain.Student>
 
-<h2>Students</h2>
-
+<h2 class="mb-3">Students</h2>
+<a class="btn btn-info mb-3" href="School/Add">Add Student</a>
 <table class="table">
     <thead>
         <tr>
@@ -13,7 +13,7 @@
             <th>Student Name</th>
             <th>Date Of Birth</th>
             <th>Father Name</th>
-            <th>Class</th>
+            <!--<th>Class</th>-->
             <th></th>
         </tr>
     </thead>
@@ -25,7 +25,7 @@
                 <td>@student.StudentName</td>
                 <td>@student.DateOfBirth.ToString("dd-MM-yyyy")</td>
                 <td>@student.FatherName</td>
-                <td>@student.Class</td>
+                <!--<td>student.Class</td>-->
                 <td><a href="School/View/@student.StudentID">View</a></td>
             </tr>    
         }
