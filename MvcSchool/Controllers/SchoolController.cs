@@ -278,5 +278,22 @@ namespace MvcSchool.Controllers
             return RedirectToAction("ViewEnrollment");
 
         }
+
+        [HttpGet]
+        public async Task<IActionResult> ClassSelect(string ClassName)
+        {
+            var student = await (from s in schoolDbContext.Students
+                                 where s.Class == ClassName
+                                 select new UpdateStudentViewModel
+                                 {
+                                     StudentID= s.StudentID,
+                                     StudentName= s.StudentName,
+                                     DateOfBirth= s.DateOfBirth,
+                                     FatherName = s.FatherName,
+                                     Class= s.Class
+                                 }).ToListAsync();
+            return View(student);
+
+        }
     }
 }
