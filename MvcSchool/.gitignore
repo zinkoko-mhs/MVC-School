@@ -1,0 +1,10 @@
+bin
+.vscode
+obj
+*.db
+.history
+.vs
+Library
+credentials.json
+logs
+logs/*
