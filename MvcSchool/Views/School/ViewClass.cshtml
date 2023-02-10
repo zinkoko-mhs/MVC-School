@@ -53,11 +53,8 @@
 
         @for (var size = 5; size <= pager.TotalItems; size += 5)
         {
-                <li><a class="dropdown-item" href="ViewClass/?pg=@pageNo&pageSize=@size">@size</a></li>
+                <li><a class="dropdown-item" href="ViewClass?pg=@pageNo&pageSize=@size">@size</a></li>
         }
-        <!--<li><a class="dropdown-item" href="ViewEnrollment?pg=1&pageSize=5">5</a></li>
-            <li><a class="dropdown-item" href="ViewEnrollment?pg=1&pageSize=10">10</a></li>
-            <li><a class="dropdown-item" href="ViewEnrollment?pg=1&pageSize=15">15</a></li>-->
   </ul>
 </div>
 
@@ -68,7 +65,7 @@
             @for (var pg = pager.StartPage; pg <= pager.EndPage; pg++)
             {
                 <li class="page-item @(pg==pager.CurrentPage ? "active" : "")">
-                <a class="page-link" href="ViewClass/?pg=@pg&pageSize=@pageSize">@pg</a>
+                <a class="page-link" href="ViewClass?pg=@pg&pageSize=@pageSize">@pg</a>
                 </li>
             }
         </ul>

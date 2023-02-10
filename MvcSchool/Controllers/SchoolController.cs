@@ -60,7 +60,7 @@ namespace MvcSchool.Controllers
             };
             await schoolDbContext.Students.AddAsync(student);
             await schoolDbContext.SaveChangesAsync();
-            return RedirectToAction("Add");
+            return RedirectToAction("Index");
         }
 
         [HttpGet]
@@ -252,18 +252,6 @@ namespace MvcSchool.Controllers
         [HttpGet]
         public async Task<IActionResult> ViewEnrollment(int pg,int pageSize)
         {
-            //CurrentPage = 1;
-            //PageSize = 10;
-
-            /*if(CurrentPage == null)
-            {
-                CurrentPage = 1;
-            }
-            if(PageSize == null)
-            {
-                PageSize = 10;
-            }*/
-
             if(pageSize < 1)
             {
                 pageSize = 5;
