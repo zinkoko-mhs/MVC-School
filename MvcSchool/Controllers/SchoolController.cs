@@ -210,7 +210,7 @@ namespace MvcSchool.Controllers
             await schoolDbContext.AddAsync(enrollment);
             await schoolDbContext.SaveChangesAsync();
 
-            return RedirectToAction("AddEnrollment");
+            return RedirectToAction("ViewEnrollment");
         }
 
         [HttpGet]
@@ -292,21 +292,26 @@ namespace MvcSchool.Controllers
 
         }
 
-        /*[HttpGet]
-        public async Task<IActionResult> ClassSelect(string ClassName)
+        [HttpGet]
+        public async Task<IActionResult> ClassSelect(string className)
         {
-            var student = await (from s in schoolDbContext.Students
-                                 where s.Class == ClassName
-                                 select new UpdateStudentViewModel
-                                 {
-                                     StudentID= s.StudentID,
-                                     StudentName= s.StudentName,
-                                     DateOfBirth= s.DateOfBirth,
-                                     FatherName = s.FatherName,
-                                     Class= s.Class
-                                 }).ToListAsync();
-            return View(student);
+            int classId = (from c in schoolDbContext.Classes
+                           where c.ClassName == className
+                           select c.ClassID).First();
 
-        }*/
+            var students = await (from e in schoolDbContext.Enrollmentss
+                            join s in schoolDbContext.Students on e.StudentID equals s.StudentID
+                            where e.ClassID == classId
+                            select new ClassSelectViewModel
+                            {
+                                StudentID = s.StudentID,
+                                StudentName= s.StudentName,
+                                DateOfBirth= s.DateOfBirth,
+                                FatherName  = s.FatherName,
+                                Class=className
+                            }).ToListAsync();
+
+            return View(students);
+        }
     }
 }

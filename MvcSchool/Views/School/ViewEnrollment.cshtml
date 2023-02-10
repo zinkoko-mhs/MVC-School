@@ -28,8 +28,8 @@
                     <td>@enrollment.StudentName</td>
                     <td>@enrollment.ClassName</td>
                     <td>@enrollment.PaymentStautus</td>
-                    <td>@enrollment.PaymentDeadline</td>
-                    <td>@enrollment.CreatedDate</td>
+                    <td>@enrollment.PaymentDeadline.ToString("dd-MM-yyyy")</td>
+                    <td>@enrollment.CreatedDate.ToString("dd-MM-yyyy")</td>
                     <td>@enrollment.CreatedBy</td>
                     <td><a href="UpdateEnrollment/@enrollment.EnrollmentID">View</a></td>
                 </tr>    

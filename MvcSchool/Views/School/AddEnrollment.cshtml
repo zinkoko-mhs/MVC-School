@@ -4,10 +4,10 @@
 <h2>Add Enrollment</h2>
 <form class="mt-3" method="post" action="AddEnrollment">
     <div class="mb-3">
-        <select class="form-select" asp-for="StudentName" aria-label="Student Name">
-            @foreach(var studentName in Model.StudentName)
+        <select class="form-select" asp-for="StudentName" aria-label="Default select example">
+            @foreach (var stuName in Model.StudentName)
             {
-                <option value="@studentName">@studentName</option>
+                <option asp-for="StudentName" value="@stuName">@stuName</option>
             }
         </select>
         <!--<input type="number" class="form-control" asp-for="StudentName">-->
@@ -18,7 +18,7 @@
         <select class="form-select" asp-for="ClassName" aria-label="Class Name">
             @foreach(var className in Model.ClassName)
             {
-                <option value="@className">@className</option>
+                <option  value="@className">@className</option>
             }
         </select>
     </div>
