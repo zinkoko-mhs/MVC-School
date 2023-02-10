@@ -1,5 +1,4 @@
-﻿@{
-}
+﻿
 
 @model List<MvcSchool.Models.ClassSelectViewModel>
 
@@ -25,10 +24,12 @@
                     <td>@student.DateOfBirth.ToString("dd-MM-yyyy")</td>
                     <td>@student.FatherName</td>
                     <td>@student.Class</td>
-                    <td><a href="School/View/@student.StudentID">View</a></td>
+                    <td><a href="View/@student.StudentID">View</a></td>
                 </tr>    
         }
     </tbody>
 </table>
+
+
 
 

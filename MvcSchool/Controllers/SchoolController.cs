@@ -5,6 +5,8 @@ using MvcSchool.Data;
 using MvcSchool.Models;
 using MvcSchool.Models.Domain;
 using System.Collections.Immutable;
+using System.Linq;
+using static MvcSchool.Models.ShowEnrollmentViewModel;
 
 namespace MvcSchool.Controllers
 {
@@ -17,10 +19,27 @@ namespace MvcSchool.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int pg, int pageSize)
         {
+            if (pageSize < 1)
+            {
+                pageSize = 5;
+            }
+            if (pg < 1)
+            {
+                pg = 1;
+            }
             var students = await schoolDbContext.Students.ToListAsync();
-            return View(students);
+            int resCount = students.Count();
+
+            var pager = new Pager(resCount, pg, pageSize);
+            int recSkip = (pg - 1) * pageSize;
+
+            var data = students.Skip(recSkip).Take(pageSize).ToList();
+            this.ViewBag.Pager = pager;
+
+            //.Skip((int)(CurrentPage - 1) * (int)PageSize).Take((int)PageSize)
+            return View(data);
         }
 
         [HttpGet]
@@ -120,10 +139,27 @@ namespace MvcSchool.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> ViewClass() 
+        public async Task<IActionResult> ViewClass(int pg, int pageSize) 
         {
+            if (pageSize < 1)
+            {
+                pageSize = 5;
+            }
+            if (pg < 1)
+            {
+                pg = 1;
+            }
             var classModel = await schoolDbContext.Classes.ToListAsync();
-            return View(classModel);
+            int resCount = classModel.Count();
+
+            var pager = new Pager(resCount, pg, pageSize);
+            int recSkip = (pg - 1) * pageSize;
+
+            var data = classModel.Skip(recSkip).Take(pageSize).ToList();
+            this.ViewBag.Pager = pager;
+
+            //.Skip((int)(CurrentPage - 1) * (int)PageSize).Take((int)PageSize)
+            return View(data);
         }
 
         [HttpGet]
@@ -192,7 +228,7 @@ namespace MvcSchool.Controllers
             string name = addEnrollmentRequest.StudentName.First();
             string className = addEnrollmentRequest.ClassName.First();
 
-            var enrollment = new Enrollment()
+            var enrollment = new Models.Domain.Enrollment()
             {
                 StudentID = (from s in schoolDbContext.Students
                              where s.StudentName == name
@@ -214,22 +250,54 @@ namespace MvcSchool.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> ViewEnrollment()
+        public async Task<IActionResult> ViewEnrollment(int pg,int pageSize)
         {
-            var enrollment = await ( from e in schoolDbContext.Enrollmentss
-                                   join s in schoolDbContext.Students on e.StudentID equals s.StudentID                                   
-                                   join c in schoolDbContext.Classes on e.ClassID equals c.ClassID
-                                   select new ShowEnrollmentViewModel 
-                                   {
-                                       EnrollmentID = e.EnrollmentID,
-                                       StudentName = s.StudentName,
-                                       ClassName = c.ClassName,
-                                       PaymentDeadline = e.PaymentDeadline,
-                                       PaymentStautus = e.PaymentStautus,
-                                       CreatedDate = e.CreatedDate,
-                                       CreatedBy = e.CreatedBy
-                                   }).ToListAsync();
-            return View(enrollment);
+            //CurrentPage = 1;
+            //PageSize = 10;
+
+            /*if(CurrentPage == null)
+            {
+                CurrentPage = 1;
+            }
+            if(PageSize == null)
+            {
+                PageSize = 10;
+            }*/
+
+            if(pageSize < 1)
+            {
+                pageSize = 5;
+            }
+            if(pg < 1 )
+            {
+                pg = 1;
+            }
+            
+            var enrollment = await (from e in schoolDbContext.Enrollmentss
+                                        join s in schoolDbContext.Students on e.StudentID equals s.StudentID
+                                        join c in schoolDbContext.Classes on e.ClassID equals c.ClassID
+                                        orderby (e.EnrollmentID)
+                                        select new ShowEnrollmentViewModel
+                                        {
+                                            EnrollmentID = e.EnrollmentID,
+                                            StudentName = s.StudentName,
+                                            ClassName = c.ClassName,
+                                            PaymentDeadline = e.PaymentDeadline,
+                                            PaymentStautus = e.PaymentStautus,
+                                            CreatedDate = e.CreatedDate,
+                                            CreatedBy = e.CreatedBy,
+                                            
+                                        }).ToListAsync();
+            int resCount = enrollment.Count();
+
+            var pager = new Pager(resCount,pg,pageSize);
+            int recSkip = (pg - 1) * pageSize;
+
+            var data =enrollment.Skip(recSkip).Take(pageSize).ToList();
+            this.ViewBag.Pager = pager;
+
+            //.Skip((int)(CurrentPage - 1) * (int)PageSize).Take((int)PageSize)
+            return View(data);
 
         }
 
@@ -301,7 +369,8 @@ namespace MvcSchool.Controllers
 
             var students = await (from e in schoolDbContext.Enrollmentss
                             join s in schoolDbContext.Students on e.StudentID equals s.StudentID
-                            where e.ClassID == classId
+                            where (e.ClassID == classId)
+                            orderby (s.StudentID)
                             select new ClassSelectViewModel
                             {
                                 StudentID = s.StudentID,
@@ -310,7 +379,6 @@ namespace MvcSchool.Controllers
                                 FatherName  = s.FatherName,
                                 Class=className
                             }).ToListAsync();
-
             return View(students);
         }
     }
