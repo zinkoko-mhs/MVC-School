@@ -116,7 +116,7 @@ namespace MvcSchool.Controllers
             };
             await schoolDbContext.AddAsync(classModel);
             await schoolDbContext.SaveChangesAsync();
-            return RedirectToAction("AddClass");
+            return RedirectToAction("ViewClass");
         }
 
         [HttpGet]
