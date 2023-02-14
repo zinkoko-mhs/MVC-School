@@ -28,5 +28,31 @@
     </div>
 
   <button type="submit" class="btn btn-primary">Submit</button>
-  <button type="submit" class="btn btn-danger" asp-controller="School" asp-action="DeleteClass">Delete</button>
+   <button id="btn-del" type="submit" class="btn btn-danger" asp-controller="School" asp-action="DeleteClass">Delete</button>
+    <!--@Html.ActionLink("Delete","DeleteClass",new {id=Model.ClassID},new {@class="btn btn-danger",@onclick="return confirm('Are You Sure You Want To Delete "+Model.ClassName+" Class');"})-->
+
 </form>
+
+<script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
+@section scripts{
+    <script>
+        $(document).ready(function () {
+
+            $("#btn-del").click(function () {
+
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("DeleteClass","School")",
+                    data: { id: '@Model.ClassID' },
+                    success: function () {
+                        console.log("Success");
+                    },
+                    Error: function (req, status, error) {
+                        console.log(status);
+                    }
+                });
+            })
+
+        })
+    </script>
+}

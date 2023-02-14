@@ -1,0 +1,29 @@
+﻿@model MvcSchool.Models.Domain.Login;
+
+@{
+}
+
+<h2>Login</h2>
+<form asp-controller="Access" asp-action="Login" method="post">
+  <div class="mb-3">
+    <label class="form-label">Email</label>
+    <input asp-for="Email" type="email" class="form-control">
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">Password</label>
+    <input asp-for="Password" type="password" class="form-control">
+  </div>
+
+  <div class="mb-3 form-check">
+    <input asp-for="KeepLoggedIn" type="checkbox" class="form-check-input">
+    <label class="form-check-label" >Keep Me Logged In</label>
+  </div>
+
+  <button type="submit" class="btn btn-primary">Submit</button>
+
+    @if(ViewData["ValidateMessage"] != null)
+    {
+        <label>@ViewData["ValidateMessage"]</label>
+    }
+</form>

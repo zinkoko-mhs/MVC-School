@@ -8,8 +8,13 @@ using System.Collections.Immutable;
 using System.Linq;
 using static MvcSchool.Models.ShowEnrollmentViewModel;
 
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
+
 namespace MvcSchool.Controllers
 {
+    [Authorize]
     public class SchoolController : Controller
     {
         private readonly SchoolDbContext schoolDbContext;
@@ -23,23 +28,25 @@ namespace MvcSchool.Controllers
         {
             if (pageSize < 1)
             {
-                pageSize = 5;
+                pageSize = 10;
             }
             if (pg < 1)
             {
                 pg = 1;
             }
-            var students = await schoolDbContext.Students.ToListAsync();
-            int resCount = students.Count();
-
+            int resCount = schoolDbContext.Students.Count();
             var pager = new Pager(resCount, pg, pageSize);
             int recSkip = (pg - 1) * pageSize;
 
-            var data = students.Skip(recSkip).Take(pageSize).ToList();
+            var students = await schoolDbContext.Students.Skip(recSkip).Take(pageSize).ToListAsync();
+
+            
+
+            //var data = students.Skip(recSkip).Take(pageSize).ToList();
             this.ViewBag.Pager = pager;
 
             //.Skip((int)(CurrentPage - 1) * (int)PageSize).Take((int)PageSize)
-            return View(data);
+            return View(students);
         }
 
         [HttpGet]
@@ -103,9 +110,9 @@ namespace MvcSchool.Controllers
 
         }
         [HttpPost]
-        public async Task<IActionResult> Delete(UpdateStudentViewModel updateStudentRequest)
+        public async Task<IActionResult> Delete(int id)
         {
-            var student = await schoolDbContext.Students.FindAsync(updateStudentRequest.StudentID);
+            var student = await schoolDbContext.Students.FindAsync(id);
 
             if(student != null) 
             {
@@ -143,23 +150,23 @@ namespace MvcSchool.Controllers
         {
             if (pageSize < 1)
             {
-                pageSize = 5;
+                pageSize = 10;
             }
             if (pg < 1)
             {
                 pg = 1;
             }
-            var classModel = await schoolDbContext.Classes.ToListAsync();
-            int resCount = classModel.Count();
+            int resCount = schoolDbContext.Classes.Count();
 
             var pager = new Pager(resCount, pg, pageSize);
             int recSkip = (pg - 1) * pageSize;
+            var classModel = await schoolDbContext.Classes.Skip(recSkip).Take(pageSize).ToListAsync();
 
-            var data = classModel.Skip(recSkip).Take(pageSize).ToList();
+            //var data = classModel.Skip(recSkip).Take(pageSize).ToList();
             this.ViewBag.Pager = pager;
 
             //.Skip((int)(CurrentPage - 1) * (int)PageSize).Take((int)PageSize)
-            return View(data);
+            return View(classModel);
         }
 
         [HttpGet]
@@ -200,9 +207,10 @@ namespace MvcSchool.Controllers
             return RedirectToAction("ViewClass");
         }
 
-        public async Task<IActionResult> DeleteClass(UpdateClassViewModel updateClassRequest)
+        [HttpPost]
+        public async Task<IActionResult> DeleteClass(int id)
         {
-            var classModel = await schoolDbContext.Classes.FindAsync(updateClassRequest.ClassID);
+            var classModel = await schoolDbContext.Classes.FindAsync(id);
             if(classModel!= null ) 
             {
                 schoolDbContext.Classes.Remove(classModel);
@@ -254,13 +262,30 @@ namespace MvcSchool.Controllers
         {
             if(pageSize < 1)
             {
-                pageSize = 5;
+                pageSize = 10;
             }
             if(pg < 1 )
             {
                 pg = 1;
             }
-            
+            int resCount =  (from e in schoolDbContext.Enrollmentss
+                                  join s in schoolDbContext.Students on e.StudentID equals s.StudentID
+                                  join c in schoolDbContext.Classes on e.ClassID equals c.ClassID
+                                  orderby (e.EnrollmentID)
+                                  select new ShowEnrollmentViewModel
+                                  {
+                                      EnrollmentID = e.EnrollmentID,
+                                      StudentName = s.StudentName,
+                                      ClassName = c.ClassName,
+                                      PaymentDeadline = e.PaymentDeadline,
+                                      PaymentStautus = e.PaymentStautus,
+                                      CreatedDate = e.CreatedDate,
+                                      CreatedBy = e.CreatedBy,
+
+                                  }).Count();
+            var pager = new Pager(resCount, pg, pageSize);
+            int recSkip = (pg - 1) * pageSize;
+
             var enrollment = await (from e in schoolDbContext.Enrollmentss
                                         join s in schoolDbContext.Students on e.StudentID equals s.StudentID
                                         join c in schoolDbContext.Classes on e.ClassID equals c.ClassID
@@ -275,17 +300,13 @@ namespace MvcSchool.Controllers
                                             CreatedDate = e.CreatedDate,
                                             CreatedBy = e.CreatedBy,
                                             
-                                        }).ToListAsync();
-            int resCount = enrollment.Count();
+                                        }).Skip(recSkip).Take(pageSize).ToListAsync();
 
-            var pager = new Pager(resCount,pg,pageSize);
-            int recSkip = (pg - 1) * pageSize;
-
-            var data =enrollment.Skip(recSkip).Take(pageSize).ToList();
+            //var data =enrollment.Skip(recSkip).Take(pageSize).ToList();
             this.ViewBag.Pager = pager;
 
             //.Skip((int)(CurrentPage - 1) * (int)PageSize).Take((int)PageSize)
-            return View(data);
+            return View(enrollment);
 
         }
 
@@ -333,9 +354,9 @@ namespace MvcSchool.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> DeleteEnrollment(UpdateEnrollmentViewModel updateEnrollmentRequest)
+        public async Task<IActionResult> DeleteEnrollment(int id)
         {
-            var enrollment = await schoolDbContext.Enrollmentss.FindAsync(updateEnrollmentRequest.EnrollmentID);
+            var enrollment = await schoolDbContext.Enrollmentss.FindAsync(id);
             
             if(enrollment != null)
             {
@@ -368,6 +389,12 @@ namespace MvcSchool.Controllers
                                 Class=className
                             }).ToListAsync();
             return View(students);
+        }
+
+        public async Task<IActionResult> LogOut()
+        {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return RedirectToAction("Login","Access");
         }
     }
 }

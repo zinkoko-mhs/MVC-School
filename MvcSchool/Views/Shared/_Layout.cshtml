@@ -28,6 +28,9 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="School" asp-action="ViewEnrollment">Enrollments</a>
                         </li>
+                        <li class="nav-item">
+                                @Html.ActionLink("Log Out","Logout",new{},new {@class="nav-link text-dark",@onclick="return confirm('Are You Sure You Want To Log Out');"})
+                        </li>
                     </ul>
                 </div>
             </div>

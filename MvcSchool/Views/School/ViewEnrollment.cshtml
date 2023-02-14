@@ -2,7 +2,7 @@
 @{
     var pager = new Pager();
     int pageNo = 0;
-    int pageSize = 5;
+    int pageSize = 10;
 
     if(ViewBag.Pager != null)
     {
@@ -51,11 +51,11 @@
 
 <div class="dropdown">
   <button class="btn btn-info" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-        Select Number of Rows
+        Select Number Of Rows 
   </button>
   <ul class="dropdown-menu">
 
-        @for (var size = 5; size<=pager.TotalItems; size+=5)
+        @for (var size = 10; size<=pager.TotalItems; size+=10)
         {
             <li><a class="dropdown-item" href="ViewEnrollment?pg=@pageNo&pageSize=@size">@size</a></li>
         }

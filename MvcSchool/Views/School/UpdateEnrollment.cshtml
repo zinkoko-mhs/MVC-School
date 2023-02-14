@@ -6,7 +6,7 @@
 <form class="mt-3" method="post" action="UpdateEnrollment">
     <div class="mb-3">
         <label for="" class="form-label">Enrollment ID</label>
-        <input type="text" class="form-control" asp-for="EnrollmentID" readonly>
+        <input type="text" id="EnrollmentID" class="form-control" asp-for="EnrollmentID" readonly>
     </div>
     <div class="mb-3">
         <label for="" class="form-label">Student ID</label>
@@ -34,7 +34,30 @@
     </div>
 
   <button type="submit" class="btn btn-primary">Submit</button>
-  <button type="submit" class="btn btn-danger" asp-controller="School" asp-action="DeleteEnrollment">Delete</button>
+    <button type="submit" id="btn-del" class="btn btn-danger" asp-controller="School" asp-action="DeleteEnrollment">Delete</button>
+    <!--@Html.ActionLink("Delete","DeleteEnrollment",new {id=Model.EnrollmentID},new {@class="btn btn-danger",@onclick="return confirm('Are You Sure You Want To Delete Enrollment - "+Model.EnrollmentID+"');"})-->
 </form>
 
+<script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
+@section scripts{
+    <script>
+        $(document).ready(function(){
 
+            $("#btn-del").click(function(){
+
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("DeleteEnrollment","School")",
+                    data: { id: '@Model.EnrollmentID' },
+                    success: function () {
+                        console.log("Success");
+                    },
+                    Error: function (req, status, error) {
+                        console.log(status);
+                    }
+                });
+            })
+            
+        })
+    </script>
+}

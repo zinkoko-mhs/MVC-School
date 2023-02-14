@@ -29,5 +29,50 @@
     </div>-->
 
   <button type="submit" class="btn btn-primary">Submit</button>
-  <button type="submit" class="btn btn-danger" asp-controller="School" asp-action="Delete">Delete</button>
+    <button type="submit" id="btn-del" class="btn btn-danger" asp-controller="School" asp-action="Delete">Delete</button>
+
+    <!--@Html.ActionLink("Delete","Delete",new {id=Model.StudentID},new {@class="btn btn-danger",@onclick="return confirm('Are You Sure You Want To Delete Student - "+Model.StudentID+"');"})-->
+
+
 </form>
+<script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
+
+@section scripts{
+
+    <script>
+
+        $(document).ready(function(){
+
+            $("#btn-del").click(function(){
+                
+                /*$.ajax({
+                    type: "POST",
+                    url: "Url.Action("Delete","School")",
+                    data: { id: 'Model.StudentID' },
+                    success: function(){
+                        console.log("success");
+                    }
+                    Error: function(req, status,error){
+                        console.log(status);
+                    }
+                });*/
+
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("Delete","School")",
+                    data: { id: '@Model.StudentID' },
+                    success: function () {
+                        console.log("Success");
+                    },
+                    Error: function (req, status, error) {
+                        console.log(status);
+                    }
+                });
+
+            })
+
+        })
+
+    </script>
+
+}

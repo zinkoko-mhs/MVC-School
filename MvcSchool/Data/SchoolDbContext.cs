@@ -12,5 +12,6 @@ namespace MvcSchool.Data
         public DbSet<Student> Students { get; set; }
         public DbSet<Class> Classes { get; set; }
         public DbSet<Enrollment> Enrollmentss { get; set; }
+        public DbSet<Login> Loginaccount { get; set; }
     }
 }
